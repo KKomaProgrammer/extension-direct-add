@@ -17,6 +17,7 @@
   init();
 
   function init() {
+    inspectUrl(location.href, document.title || '현재 페이지');
     scanAnchorsChunked(Array.from(document.links || []));
     observeLinks();
   }
@@ -56,9 +57,7 @@
     for (const node of nodes) {
       if (!node || !node.querySelectorAll) continue;
       if (node.matches && node.matches('a[href]')) anchors.push(node);
-      if (anchors.length < SCAN_BATCH_SIZE) {
-        anchors.push(...node.querySelectorAll('a[href]'));
-      }
+      if (anchors.length < SCAN_BATCH_SIZE) anchors.push(...node.querySelectorAll('a[href]'));
       if (anchors.length >= SCAN_BATCH_SIZE) break;
     }
     scanAnchorsChunked(anchors);
@@ -79,16 +78,19 @@
 
   function inspectAnchor(anchor) {
     if (!anchor || candidates.size >= MAX_CANDIDATES) return;
-    const href = anchor.href;
-    if (!href || !/^https?:\/\//i.test(href)) return;
+    const title = cleanText(anchor.textContent) || cleanText(anchor.getAttribute('aria-label')) || '';
+    inspectUrl(anchor.href, title);
+  }
 
+  function inspectUrl(href, label) {
+    if (!href || candidates.size >= MAX_CANDIDATES || !/^https?:\/\//i.test(href)) return;
     const kind = classifyLink(href);
     if (!kind) return;
 
     const key = `${kind}:${normalizeLinkKey(href)}`;
     if (candidates.has(key)) return;
 
-    const title = cleanText(anchor.textContent) || cleanText(anchor.getAttribute('aria-label')) || inferTitle(href, kind);
+    const title = cleanText(label) || inferTitle(href, kind);
     const candidate = { key, kind, url: href, title, pageUrl: location.href, status: 'ready' };
     candidates.set(key, candidate);
     updateUi();
@@ -181,7 +183,7 @@
 
     const hint = document.createElement('div');
     hint.className = 'eddh-hint';
-    hint.textContent = '새 탭을 열지 않고 백그라운드로 ZIP을 다운로드합니다. 설치는 압축 해제 후 chrome://extensions 에서 직접 로드해야 합니다.';
+    hint.textContent = '새 탭을 열지 않고 백그라운드로 ZIP을 다운로드합니다. 설치는 압축 해제 후 확장 프로그램 관리 화면에서 직접 로드해야 합니다.';
 
     const list = document.createElement('div');
     list.className = 'eddh-list';
