@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Extension Direct Add</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>Extension Direct Add</h1>
+      <p>ZIP/GitHub 확장 소스를 조용히 다운로드하고 압축해제 설치 절차를 안내합니다.</p>
+    </header>
+
+    <section class="card">
+      <h2>설치 방법</h2>
+      <ol>
+        <li>다운로드된 ZIP을 압축 해제합니다.</li>
+        <li>주소창에 <button id="copyExtensionsUrl" class="link-button">chrome://extensions 복사</button> 를 입력합니다.</li>
+        <li>개발자 모드를 켭니다.</li>
+        <li><b>압축해제된 확장 프로그램을 로드</b>를 누르고 manifest.json이 있는 폴더를 선택합니다.</li>
+      </ol>
+      <p class="note">Chrome은 웹페이지/확장 프로그램이 다른 확장 프로그램을 사용자 몰래 설치하는 것을 허용하지 않습니다.</p>
+    </section>
+
+    <section class="card">
+      <div class="row-title">
+        <h2>최근 다운로드</h2>
+        <button id="clearHistory" class="ghost">비우기</button>
+      </div>
+      <div id="history" class="history empty">아직 다운로드 기록이 없습니다.</div>
+    </section>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>
