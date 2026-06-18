@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Extension Direct Add Helper",
+  "version": "1.0.0",
+  "description": "Detects ZIP and GitHub extension source links, downloads them quietly, and shows safe Chrome unpacked-install steps.",
+  "permissions": [
+    "downloads",
+    "storage",
+    "clipboardWrite"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Extension Direct Add",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content-script.js"
+      ],
+      "css": [
+        "content-style.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
